@@ -12,5 +12,5 @@ exports.getTopics = (req, res, next) => {
 }
 
 exports.badEndpoint = (req, res, next) => {
-    res.status(404).send("Bad endpoint - File not found.")
+    res.status(404).send({msg: "Bad endpoint - File not found."})
 }
