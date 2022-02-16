@@ -7,7 +7,7 @@ exports.getTopics = (req, res, next) => {
         if (topics) {
         res.status(200).send(topics)
         } else {
-            throw(404)
+            res.status(404).send("Error: No database found.")
         }
     })
     .catch((err)=>{
