@@ -6,8 +6,6 @@ exports.getTopics = (req, res, next) => {
     fetchTopics().then((topics)=> {
         if (topics) {
         res.status(200).send(topics)
-        } else {
-            res.status(404).send("Error: No database found.")
         }
     })
     .catch((err)=>{

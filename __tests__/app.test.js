@@ -41,8 +41,5 @@ describe("api/topics Tests", ()=>{
             .then((data)=>{
                 expect(data.text).toEqual("Bad endpoint - File not found.")
             })
-            .catch((err)=>{
-                console.log(err)
-            })
     })
 })
