@@ -17,8 +17,8 @@ describe("api/topics Tests", ()=>{
             .get("/api/topics")
             .expect(200)
             .then((data)=>{
-                expect(Array.isArray(data.body)).toBe(true)
-                expect(data.body.length).toBe(testData.topicData.length)
+                expect(Array.isArray(data.body.topics)).toBe(true)
+                expect(data.body.topics.length).toBe(testData.topicData.length)
             })            
     })
     test("api/topics items all contain slug and description.", ()=>{
@@ -26,7 +26,7 @@ describe("api/topics Tests", ()=>{
             .get("/api/topics")
             .expect(200)
             .then((data)=>{
-                data.body.forEach(item => {
+                data.body.topics.forEach(item => {
                     expect.objectContaining({
                         slug: expect.any(String),
                         description: expect.any(String)
