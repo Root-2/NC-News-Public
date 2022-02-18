@@ -39,9 +39,9 @@ describe("/api/articles/:article_id", ()=>{
         return request(app)
         .get("/api/articles/1")
         .expect(200)
-        .then((article)=>{
+        .then((response)=>{
 
-            expect(article.body).toEqual(
+            expect(response.body.article).toEqual(
                 expect.objectContaining({
                     author: expect.any(String),  
                     article_id: expect.any(Number),
