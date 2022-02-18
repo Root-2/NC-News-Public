@@ -20,5 +20,10 @@ app.get(`/api/articles/:article_id`, getArticle)
 app.all(`/*`, badEndpoint)
 
 
+app.use((err, req, res, next)=>{
+    res.status(err.status).send(err.text)
+})
+
+
 // Export all app functions to be called by controllers.
 module.exports = app

@@ -40,6 +40,7 @@ describe("/api/articles/:article_id", ()=>{
         .get("/api/articles/1")
         .expect(200)
         .then((article)=>{
+
             expect(article.body).toEqual(
                 expect.objectContaining({
                     author: expect.any(String),  
@@ -52,12 +53,20 @@ describe("/api/articles/:article_id", ()=>{
             )}
         )
      })
-     test.only("Status 404 - Reports if no item found.", ()=>{
+     test("Status 404 - Reports if no item found.", ()=>{
         return request(app)
-        .get("/api/articles/badID")
+        .get("/api/articles/987654")
         .expect(404)
         .then((body)=>{
             expect(body.text).toBe("404 - No article at ID.")
+        })
+     })
+     test("Status 400 - Bad ID", ()=>{
+        return request(app)
+        .get("/api/articles/badID")
+        .expect(400)
+        .then((body)=>{
+            expect(body.text).toBe("400 - Bad request, ID should be a number.")
         })
      })
 })
