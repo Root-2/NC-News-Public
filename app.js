@@ -9,10 +9,12 @@ const app = express();
 app.use(express.json());
 const {getTopics} = require ('./controllers/topics.controller');
 const {badEndpoint} = require ('./controllers/topics.controller');
-
+const {getArticle} = require ('./controllers/articles.controller');
 
 // Designate api/topics endpoint to go use getTopics controller.
 app.get(`/api/topics`, getTopics)
+
+app.get(`/api/articles/:article_id`, getArticle)
 
 //Catch endpoint for any bad paths.
 app.all(`/*`, badEndpoint)
