@@ -33,3 +33,23 @@ describe("api/topics Tests", ()=>{
             })
     })
 })
+
+
+
+
+describe("api/users", ()=>{
+    test("200 - Returns an array of objects with the username property.", ()=>{
+        return request(app)
+        .get("/api/users")
+        .expect(200)
+        .then(({body:{users}})=>{
+            expect(users.length).toBe(testData.userData.length)
+            users.forEach(item => {
+                expect.objectContaining({
+                    slug: expect.any(String),
+                    description: expect.any(String)
+                })
+            })
+        })
+    })
+})
