@@ -9,8 +9,8 @@ afterAll(() => {db.end() });
 // Re-seeds data before each test.
 beforeEach(() => seed(testData))
 
-describe("api/topics Tests", ()=>{
-    test("api/topics items all contain slug and description.", ()=>{
+describe("api/topics", ()=>{
+    test("Status 200 - Items all contain slug and description.", ()=>{
         return request(app)
             .get("/api/topics")
             .expect(200)
@@ -24,16 +24,52 @@ describe("api/topics Tests", ()=>{
                 })
             })
     })
-    test("Incorrect APIs return a 404 if the path does not exist.", ()=>{
+    test("Status 404 - Incorrect endpoint if path does not exist.", ()=>{
         return request(app)
             .get("/api/thisisabadpath")
             .expect(404)
             .then(({body:{msg}})=>{
-                expect(msg).toEqual("Bad endpoint - File not found.")
+                expect(msg).toEqual("Bad endpoint - Path not found.")
             })
     })
 })
 
+describe("/api/articles/:article_id", ()=>{
+    test("Status 200 - Returns an object that resembles an article.", ()=>{
+        return request(app)
+        .get("/api/articles/1")
+        .expect(200)
+        .then((response)=>{
+
+            expect(response.body.article).toEqual(
+                expect.objectContaining({
+                    author: expect.any(String),  
+                    article_id: expect.any(Number),
+                    body: expect.any(String),
+                    topic: expect.any(String),
+                    created_at: expect.any(String),
+                    votes: expect.any(Number)
+                })
+            )}
+        )
+     })
+     test("Status 404 - Reports if no item found.", ()=>{
+        return request(app)
+        .get("/api/articles/987654")
+        .expect(404)
+        .then((body)=>{
+            expect(body.text).toBe("404 - No article at ID.")
+        })
+     })
+     test("Status 400 - Bad ID", ()=>{
+        return request(app)
+        .get("/api/articles/badID")
+        .expect(400)
+        .then((body)=>{
+            expect(body.text).toBe("400 - Bad request, ID should be a number.")
+        })
+     })
+})
 
 
 
