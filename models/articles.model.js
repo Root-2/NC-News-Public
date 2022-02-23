@@ -1,3 +1,4 @@
+const { rows } = require("pg/lib/defaults");
 const db = require("../db/connection");
 
 exports.fetchArticle = (id) => {
@@ -13,8 +14,19 @@ exports.fetchArticle = (id) => {
             return Promise.reject({status: "404", text: "404 - No article at ID."})
         // Returns specific object when found.
         } else {
+            console.log("ARTICLES SUCCESSFUL")
         return rows[0] 
         }
     })
 }
+}
+
+exports.fetchArticles = ()=>{
+    return db.query(`SELECT * FROM articles;`).then(({rows})=>{
+        if(rows.length === 0) {
+            return Promise.reject({status: "404", text: "404 - No articles in database."})
+        } else {
+            return rows
+        }
+    })
 }
