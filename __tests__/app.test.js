@@ -3,6 +3,7 @@ const app = require('../app')
 const seed= require('../db/seeds/seed')
 const testData = require('../db/data/test-data')
 const db = require('../db/connection')
+const { forEach } = require('../db/data/test-data/articles')
 
 // Closes database connection after each test.
 afterAll(() => {db.end() });
@@ -34,25 +35,64 @@ describe("api/topics", ()=>{
     })
 })
 
+describe("/api/articles", ()=>{
+    test("Status 200 - Returns an array of article objects.", ()=>{
+        return (request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then((response)=>{
+            response.body.forEach(article =>
+            expect(article).toEqual(
+                expect.objectContaining({
+                    author: expect.any(String),
+                    title: expect.any(String),
+                    article_id: expect.any(Number),
+                    topic: expect.any(String),
+                    created_at: expect.any(String),
+                    votes: expect.any(Number)
+                })
+            ))
+        })
+
+        )
+
+    })
+})
+
 describe("/api/articles/:article_id", ()=>{
     test("Status 200 - Returns an object that resembles an article.", ()=>{
         return request(app)
         .get("/api/articles/1")
         .expect(200)
         .then((response)=>{
-
-            expect(response.body.article).toEqual(
+            expect(response.body).toEqual(
                 expect.objectContaining({
                     author: expect.any(String),  
                     article_id: expect.any(Number),
                     body: expect.any(String),
                     topic: expect.any(String),
                     created_at: expect.any(String),
-                    votes: expect.any(Number)
+                    votes: expect.any(Number),
                 })
             )}
         )
      })
+    test("Status 200 - Contains a comment count.", ()=>{
+        return request(app)
+        .get("/api/articles/1")
+        .expect(200)
+        .then((response)=>{
+            expect(response.body).toEqual(
+                expect.objectContaining({
+                    comment_count: expect.any(Number)
+                })
+            )}
+        )
+     })
+
+
+
+
      test("Status 404 - Reports if no item found.", ()=>{
         return request(app)
         .get("/api/articles/987654")
@@ -69,6 +109,56 @@ describe("/api/articles/:article_id", ()=>{
             expect(body.text).toBe("400 - Bad request, ID should be a number.")
         })
      })
+})
+
+describe.only("patch api/articles/article_id", ()=> {
+    test("Status 200 - Vote increments by requested amount.", () => {
+         return request(app)
+        .patch("/api/articles/1")
+        .send({ inc_votes: 5})
+        .expect(200)
+        .then(({body})=>{
+          expect(body.votes).toBe(105)
+        })
+    })
+    test("Status 200 - Vote decrements normally.", () => {
+        return request(app)
+       .patch("/api/articles/1")
+       .send({ inc_votes: -5})
+       .expect(200)
+       .then(({body})=>{
+         expect(body.votes).toBe(95)
+       })
+       
+   })
+   test("Status 400 - Bad request - Bad patch object.", () => {
+    return request(app)
+   .patch("/api/articles/1")
+   .send({ eat_votes: -5})
+   .expect(400)
+   .then(({body})=>{
+     expect(body.msg).toBe("400 - Bad request - Bad patch object.")
+        })
+    })
+    test("Status 404 - Reports if no item found.", ()=>{
+        return request(app)
+        .patch("/api/articles/987654")
+        .send({ inc_votes: 5})
+        .expect(404)
+        .then((body)=>{
+            expect(body.text).toBe("404 - No article at ID.")
+        })
+     })
+        test("Status 404 - Reports if no item found.", ()=>{
+        return request(app)
+        .patch("/api/articles/987654")
+        .send({ inc_votes: 5})
+        .expect(404)
+        .then((body)=>{
+            expect(body.text).toBe("404 - No article at ID.")
+        })
+     })
+
 })
 
 
