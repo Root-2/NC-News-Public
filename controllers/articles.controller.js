@@ -2,6 +2,7 @@
 const { send } = require("express/lib/response");
 const {fetchArticle} = require("../models/articles.model")
 const {fetchArticles} = require("../models/articles.model")
+const {fetchArticleComments} = require("../models/articles.model")
 const {fetchCommentCount} = require("../models/comments.model")
 const {doPatchArticle} = require("../models/articles.model")
 
@@ -34,4 +35,9 @@ exports.patchArticle = (req, res, next) => {
     .catch((err) => {
         next(err)
     })
+}
+
+exports.getArticleComments = (req, res, next) => {
+    console.log(req.params.article_id)
+    fetchArticleComments(req.params.article_id)
 }
