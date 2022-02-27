@@ -111,6 +111,56 @@ describe("/api/articles/:article_id", ()=>{
      })
 })
 
+describe.only("patch api/articles/article_id", ()=> {
+    test("Status 200 - Vote increments by requested amount.", () => {
+         return request(app)
+        .patch("/api/articles/1")
+        .send({ inc_votes: 5})
+        .expect(200)
+        .then(({body})=>{
+          expect(body.votes).toBe(105)
+        })
+    })
+    test("Status 200 - Vote decrements normally.", () => {
+        return request(app)
+       .patch("/api/articles/1")
+       .send({ inc_votes: -5})
+       .expect(200)
+       .then(({body})=>{
+         expect(body.votes).toBe(95)
+       })
+       
+   })
+   test("Status 400 - Bad request - Bad patch object.", () => {
+    return request(app)
+   .patch("/api/articles/1")
+   .send({ eat_votes: -5})
+   .expect(400)
+   .then(({body})=>{
+     expect(body.msg).toBe("400 - Bad request - Bad patch object.")
+        })
+    })
+    test("Status 404 - Reports if no item found.", ()=>{
+        return request(app)
+        .patch("/api/articles/987654")
+        .send({ inc_votes: 5})
+        .expect(404)
+        .then((body)=>{
+            expect(body.text).toBe("404 - No article at ID.")
+        })
+     })
+        test("Status 404 - Reports if no item found.", ()=>{
+        return request(app)
+        .patch("/api/articles/987654")
+        .send({ inc_votes: 5})
+        .expect(404)
+        .then((body)=>{
+            expect(body.text).toBe("404 - No article at ID.")
+        })
+     })
+
+})
+
 
 
 describe("api/users", ()=>{
