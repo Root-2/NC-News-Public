@@ -15,14 +15,19 @@ exports.fetchArticle = (id) => {
 }
 }
 
-exports.fetchArticles = ()=>{
-    return db.query(`SELECT * FROM articles;`).then(({rows})=>{
-        if(rows.length === 0) {
-            return Promise.reject({status: "404", text: "404 - No articles in database."})
-        } else {
-            return rows
-        }
-    })
+exports.fetchArticles = () => {
+    return db.query(`SELECT * FROM articles
+                    ORDER BY created_at DESC;`)
+        .then((articles) => {
+            articles.rows.map((article) => article.comment_count = 0)
+            return db.query(`SELECT * FROM comments;`)
+                .then((comments) => {
+                    comments.rows.forEach(comment => {
+                            articles.rows[comment.article_id - 1].comment_count += 1
+                    });
+                    return articles.rows
+                })
+        })
 }
 
 exports.doPatchArticle = (id, votes)=> {
@@ -41,3 +46,15 @@ exports.doPatchArticle = (id, votes)=> {
         }
     })
 }}
+
+exports.deliverArticleComments = (comment, id)=> {
+    const newComment = comment.body
+    console.log(comment)
+    return db.query(`
+        INSERT INTO comments (body, author, article_id)
+        VALUES ('${newComment}', '${comment.username}', ${id.article_id})
+        RETURNING *;`).then(({rows})=> {
+            console.log(rows[0])
+            return rows[0]
+        })
+}

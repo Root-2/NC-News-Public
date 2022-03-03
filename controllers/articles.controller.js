@@ -2,9 +2,10 @@
 const { send } = require("express/lib/response");
 const {fetchArticle} = require("../models/articles.model")
 const {fetchArticles} = require("../models/articles.model")
-const {fetchArticleComments} = require("../models/articles.model")
+const {fetchArticleComments} = require("../models/comments.model")
 const {fetchCommentCount} = require("../models/comments.model")
 const {doPatchArticle} = require("../models/articles.model")
+const {deliverArticleComments} = require("../models/articles.model")
 
 exports.getArticle = (req, res, next) => {
     const commentCount = fetchCommentCount(req.params.article_id);
@@ -38,6 +39,20 @@ exports.patchArticle = (req, res, next) => {
 }
 
 exports.getArticleComments = (req, res, next) => {
-    console.log(req.params.article_id)
-    fetchArticleComments(req.params.article_id)
+    fetchArticleComments(req.params.article_id).then((data)=>{
+        
+        res.status(200).send(data)
+    })
+    .catch((err) => {
+        next(err)
+    })
+}
+
+exports.postArticleComments = (req, res, next) => {
+    deliverArticleComments(req.body, req.params).then((data)=>{
+        res.status(200).send(data)
+    })
+    .catch((err) => {
+        next(err)
+    })
 }

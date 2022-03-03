@@ -57,7 +57,25 @@ describe("/api/articles", ()=>{
         )
 
     })
+    test("Status 200 - Also returns a comment count.", ()=> {
+        return (request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then((response)=>{
+            response.body.forEach(article =>
+            expect(article).toEqual(
+                expect.objectContaining({
+                    comment_count: expect.any(Number)
+                })
+            ))
+        })
+
+        ) 
+    })
 })
+
+
+
 
 describe("/api/articles/:article_id", ()=>{
     test("Status 200 - Returns an object that resembles an article.", ()=>{
@@ -111,7 +129,7 @@ describe("/api/articles/:article_id", ()=>{
      })
 })
 
-describe.only("patch api/articles/article_id", ()=> {
+describe("patch api/articles/article_id", ()=> {
     test("Status 200 - Vote increments by requested amount.", () => {
          return request(app)
         .patch("/api/articles/1")
@@ -161,6 +179,18 @@ describe.only("patch api/articles/article_id", ()=> {
 
 })
 
+describe("/api/articles/:article_id/comments", ()=>{
+    test("Status 200 - Returns an array of comments.", ()=>{
+        const article3comments = [{"author": "icellusedkars", "body": "git push origin master", "comment_id": 10, "created_at": "2020-06-20T07:24:00.000Z", "votes": 0}, {"author": "icellusedkars", "body": "Ambidextrous marsupial", "comment_id": 11, "created_at": "2020-09-19T23:10:00.000Z", "votes": 0}]
+        return request(app)
+        .get("/api/articles/3/comments")
+        .expect(200)
+        .then(({body})=>{
+            expect(body).toEqual(article3comments)
+        })
+    })
+})
+
 
 
 describe("api/users", ()=>{
@@ -176,6 +206,27 @@ describe("api/users", ()=>{
                     description: expect.any(String)
                 })
             })
+        })
+    })
+})
+
+describe.only("/api/articles/:article_id/comments", ()=>{
+    test("200 - Posts a comment and returns the posted comment.", ()=> {
+        return request(app)
+        .post("/api/articles/1/comments")
+        .send({
+            username: "butter_bridge",
+            body: "This is an article."}) 
+        .expect(200)
+        .then(({body})=>{
+            expect(body).toEqual({
+                comment_id: 19,
+                body: 'This is an article.',
+                article_id: 1,
+                author: 'butter_bridge',
+                votes: 0,
+                created_at: expect.any(String)
+              })
         })
     })
 })
