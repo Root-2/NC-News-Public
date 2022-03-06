@@ -210,7 +210,7 @@ describe("api/users", ()=>{
     })
 })
 
-describe.only("/api/articles/:article_id/comments", ()=>{
+describe("/api/articles/:article_id/comments", ()=>{
     test("200 - Posts a comment and returns the posted comment.", ()=> {
         return request(app)
         .post("/api/articles/1/comments")
