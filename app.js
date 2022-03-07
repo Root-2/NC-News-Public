@@ -1,11 +1,8 @@
-// Require in core dependancies: 
-// Express for server-based testing.
-// App is a copy of Express?
-// getTopics is being pulled from the controller file with destructuring method.
-
+const cors = require('cors')
 const express = require('express');
 const res = require('express/lib/response');
 const app = express();
+app.use(cors());
 app.use(express.json());
 const {getTopics} = require ('./controllers/topics.controller');
 const {badEndpoint} = require ('./controllers/topics.controller');
