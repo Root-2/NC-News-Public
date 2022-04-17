@@ -137,7 +137,7 @@ describe("/api/articles/:article_id", ()=>{
                 response.body.forEach(article =>
                 expect(article).toEqual(
                     expect.objectContaining({
-                        comment_count: expect.any(Number)
+                        comment_count: expect.any(String)
                     })
                 ))
             })
