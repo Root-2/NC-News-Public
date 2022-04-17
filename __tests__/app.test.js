@@ -65,7 +65,7 @@ describe("/api/articles", ()=>{
             response.body.forEach(article =>
             expect(article).toEqual(
                 expect.objectContaining({
-                    comment_count: expect.any(Number)
+                    comment_count: expect.any(String)
                 })
             ))
         })
@@ -107,9 +107,60 @@ describe("/api/articles/:article_id", ()=>{
             )}
         )
      })
+     describe("/api/articles", ()=>{
+        test("Status 200 - Returns an array of article objects.", ()=>{
+            return (request(app)
+            .get("/api/articles")
+            .expect(200)
+            .then((response)=>{
+                response.body.forEach(article =>
+                expect(article).toEqual(
+                    expect.objectContaining({
+                        author: expect.any(String),
+                        title: expect.any(String),
+                        article_id: expect.any(Number),
+                        topic: expect.any(String),
+                        created_at: expect.any(String),
+                        votes: expect.any(Number)
+                    })
+                ))
+            })
+    
+            )
+    
+        })
+        test("Status 200 - Also returns a comment count.", ()=> {
+            return (request(app)
+            .get("/api/articles")
+            .expect(200)
+            .then((response)=>{
+                response.body.forEach(article =>
+                expect(article).toEqual(
+                    expect.objectContaining({
+                        comment_count: expect.any(Number)
+                    })
+                ))
+            })
+    
+            ) 
+        })
+    })
+})
+    
+    
+    
+    describe("REFACTOR /api/articles/", ()=>{
+        test("Status 200 - Can take a Sort By query.", ()=>{
+            return request(app)
+            .get("/api/articles?sort_by=created_at&order=asc")
+            .expect(200)
+            .then((response)=>{
+                expect(response.body).toEqual(
+                    expect.objectContaining({
 
-
-
+                    })
+                )}
+            )})
 
      test("Status 404 - Reports if no item found.", ()=>{
         return request(app)

@@ -1,5 +1,5 @@
 // Require in models, as controllers call models.
-const { send } = require("express/lib/response");
+const {send} = require("express/lib/response");
 const {fetchArticle} = require("../models/articles.model")
 const {fetchArticles} = require("../models/articles.model")
 const {fetchArticleComments} = require("../models/comments.model")
@@ -21,7 +21,7 @@ exports.getArticle = (req, res, next) => {
 };
 
 exports.getArticles = (req, res, next) => {
-    fetchArticles().then((data)=> {
+    fetchArticles(req.query).then((data)=> {
         res.status(200).send(data)
     })
 }

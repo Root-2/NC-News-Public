@@ -3,6 +3,7 @@ const express = require('express');
 const res = require('express/lib/response');
 const app = express();
 app.use(cors());
+
 app.use(express.json());
 const {getTopics} = require ('./controllers/topics.controller');
 const {badEndpoint} = require ('./controllers/topics.controller');
@@ -12,6 +13,8 @@ const {getArticles} = require('./controllers/articles.controller');
 const {patchArticle} = require('./controllers/articles.controller');
 const {getArticleComments} = require ('./controllers/articles.controller');
 const {postArticleComments} = require ('./controllers/articles.controller');
+const {deleteComment} = require ('./controllers/comments.controller');
+
 
 // Designate api/topics endpoint to go use getTopics controller.
 app.get(`/api/topics`, getTopics)
@@ -21,6 +24,7 @@ app.get(`/api/articles/:article_id`, getArticle)
 app.get(`/api/articles/:article_id/comments`, getArticleComments)
 app.patch(`/api/articles/:article_id`, patchArticle)
 app.post(`/api/articles/:article_id/comments`, postArticleComments)
+app.delete(`/api/comments/:comment_id`, deleteComment)
 
 
 app.get(`/api/users`, getUsers)
