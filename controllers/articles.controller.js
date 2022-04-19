@@ -6,6 +6,18 @@ const {fetchArticleComments} = require("../models/comments.model")
 const {fetchCommentCount} = require("../models/comments.model")
 const {doPatchArticle} = require("../models/articles.model")
 const {deliverArticleComments} = require("../models/articles.model")
+const {readFile} = require("fs")
+const fs = require("fs/promises")
+
+exports.getAPI = (req, res, next) => {
+    fs.readFile("controllers/endpoints.json")
+    .then((data)=> {
+        return(JSON.parse(data))
+    })
+    .then((data)=> {
+        res.status(200).send(data)
+    })
+}
 
 exports.getArticle = (req, res, next) => {
     const commentCount = fetchCommentCount(req.params.article_id);

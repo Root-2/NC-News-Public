@@ -14,11 +14,12 @@ const {patchArticle} = require('./controllers/articles.controller');
 const {getArticleComments} = require ('./controllers/articles.controller');
 const {postArticleComments} = require ('./controllers/articles.controller');
 const {deleteComment} = require ('./controllers/comments.controller');
-
+const {getAPI} = require ('./controllers/articles.controller');
 
 // Designate api/topics endpoint to go use getTopics controller.
 app.get(`/api/topics`, getTopics)
 
+app.get(`/api`, getAPI)
 app.get(`/api/articles`, getArticles)
 app.get(`/api/articles/:article_id`, getArticle)
 app.get(`/api/articles/:article_id/comments`, getArticleComments)
